@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <div>
-      <v-navigation-drawer v-model="drawer" :clipped="clipped" fixed app right>
+      <v-navigation-drawer v-model="drawer" :clipped="clipped" fixed app>
         <v-list>
           <v-list-item
             v-for="(item, i) in items"
@@ -29,6 +29,7 @@
         flat
         class="pl-0"
       >
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
         <v-card
           flat
           tile
@@ -44,7 +45,6 @@
           </v-container>
         </v-card>
         <v-spacer />
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
         <v-menu bottom left>
           <template #activator="{ on, attrs }">
             <v-btn icon v-bind="attrs" v-on="on">

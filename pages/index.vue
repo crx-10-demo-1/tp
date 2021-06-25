@@ -62,11 +62,16 @@
       :items="items"
       :items-per-page="10"
       hide-default-footer
-      class="my-4"
+      class="my-5"
     >
       <template #[`item.workId`]="{ item }">
         <v-card tile outlined class="ma-1 pa-1" @click="editItem(item)">
           {{ item.workId }}
+        </v-card>
+      </template>
+      <template #[`item.workName`]="{ item }">
+        <v-card tile outlined class="ma-1 pa-1" @click="editItem(item)">
+          {{ item.workName }}
         </v-card>
       </template>
       <template #[`item.materialCount`]="{ item }">
@@ -75,46 +80,44 @@
         </v-card>
       </template>
       <template #[`item.workStatus`]="{ item }">
-        <!-- 段取り未完 -->
-        <v-card
-          v-if="item.workStatus == '0'"
-          tile
-          color="white"
-          class="ma-0 pa-1"
-          ><v-layout justify-center>
-            {{ $workStatus.getWorkStatusText(item.workStatus) }}</v-layout
-          >
-        </v-card>
-        <!-- 段取り完了 -->
-        <v-card
-          v-if="item.workStatus == '1'"
-          tile
-          color="blue"
-          class="ma-0 pa-1"
-          ><v-layout justify-center>
-            {{ $workStatus.getWorkStatusText(item.workStatus) }}</v-layout
-          >
-        </v-card>
-        <!-- 実行中 -->
-        <v-card
-          v-if="item.workStatus == '2'"
-          tile
-          color="green"
-          class="ma-0 pa-1"
-          ><v-layout justify-center>
-            {{ $workStatus.getWorkStatusText(item.workStatus) }}</v-layout
-          >
-        </v-card>
-        <!-- 終了 -->
-        <v-card
-          v-if="item.workStatus == '3'"
-          tile
-          color="yellow"
-          class="ma-0 pa-1"
-          ><v-layout justify-center>
-            {{ $workStatus.getWorkStatusText(item.workStatus) }}</v-layout
-          >
-        </v-card>
+        <v-layout justify-center>
+          <!-- 段取り未完 -->
+          <v-sheet
+            v-if="item.workStatus == '0'"
+            class="rounded-circle mx-auto"
+            color="white"
+            elevation="3"
+            height="30"
+            width="30"
+          ></v-sheet>
+          <!-- 段取り完了 -->
+          <v-sheet
+            v-if="item.workStatus == '1'"
+            class="rounded-circle mx-auto"
+            color="blue"
+            elevation="3"
+            height="30"
+            width="30"
+          ></v-sheet>
+          <!-- 実行中 -->
+          <v-sheet
+            v-if="item.workStatus == '2'"
+            class="rounded-circle mx-auto"
+            color="green"
+            elevation="3"
+            height="30"
+            width="30"
+          ></v-sheet>
+          <!-- 終了 -->
+          <v-sheet
+            v-if="item.workStatus == '3'"
+            class="rounded-circle mx-auto"
+            color="orange"
+            elevation="3"
+            height="30"
+            width="30"
+          ></v-sheet>
+        </v-layout>
       </template>
     </v-data-table>
     <v-dialog v-model="dialog" max-width="500px">
@@ -138,6 +141,15 @@
               </v-col>
               <v-col cols="12" sm="6">
                 <v-text-field
+                  v-model="editedItem.workName"
+                  label="ワーク名称"
+                  style="font-size: 18px"
+                  max-length="5"
+                  class="mx-2"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field
                   v-model="editedItem.materialCount"
                   label="素材数"
                   type="number"
@@ -150,7 +162,6 @@
             </v-row>
           </v-container>
         </v-card-text>
-
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="close">キャンセル</v-btn>
@@ -158,18 +169,43 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
     <v-row>
-      <v-spacer />
-      <v-col cols="6" sm="3" class="mb-0 pb-0">
-        <v-btn color="#97afdb" block height="100px" style="font-size: 18px"
-          >ロボット<br />原位置戻し</v-btn
-        >
+      <v-col cols="12" sm="6">
+        <v-card outlined class="fill-height my-5">
+          <v-container>
+            状態ランプ色<br /><br />
+            段取り未完：白<br />
+            段取り完了：青<br />
+            実&nbsp;&nbsp;&nbsp;&nbsp;行&nbsp;&nbsp;&nbsp;&nbsp;中：緑<br />
+            終&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;了：オレンジ<br />
+          </v-container>
+        </v-card>
       </v-col>
-      <v-col cols="6" sm="3" class="mb-0 pb-0">
-        <v-btn color="#c7cbd1" block height="100px" style="font-size: 18px"
-          >サイクル<br />停止</v-btn
-        >
+      <v-col cols="12" sm="6">
+        <v-row>
+          <v-col cols="12" sm="6" class="mt-5">
+            <v-btn color="#97afdb" block height="140px" style="font-size: 18px"
+              >ワークストッカ<br />ビジョン補正</v-btn
+            >
+          </v-col>
+          <v-col cols="12" sm="6" class="mt-5">
+            <v-btn color="#97afdb" block height="140px" style="font-size: 18px"
+              >加工機<br />ビジョン補正</v-btn
+            >
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" sm="6">
+            <v-btn color="#97afdb" block height="140px" style="font-size: 18px"
+              >ロボット<br />原位置復帰</v-btn
+            >
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-btn color="#c7cbd1" block height="140px" style="font-size: 18px"
+              >サイクル<br />停止</v-btn
+            >
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
   </v-container>
@@ -186,6 +222,7 @@ export default class TopPage extends Vue {
   editedIndex = -1
   editedItem = {
     workId: 0,
+    workName: '',
     materialCount: 0,
   }
 
@@ -313,6 +350,17 @@ export default class TopPage extends Vue {
     return this.items.find((x) => x.workId === this.selectWorkId)?.workName
   }
 
+  // onChange() {
+  //   const idx = this.items.findIndex((x) => x.workId === this.selectWorkId)
+  //   if (idx > -1) {
+  //     const item = Object.assign({}, this.items[idx], {
+  //       workName: this.workName,
+  //     })
+  //     console.log('=====', item)
+  //     this.items.splice(idx, 1, item)
+  //   }
+  // }
+
   workIdPlus() {
     if (this.selectWorkId < 9999) return (this.selectWorkId += 1)
   }
@@ -339,3 +387,11 @@ export default class TopPage extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+.div-a {
+  border-color: #0096;
+  border-style: solid;
+  background: #c7cbd1;
+}
+</style>

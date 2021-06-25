@@ -20,7 +20,7 @@ export default {
   // target: 'server',
   target: 'static',
   router: {
-    base: '/tp/',
+    base: '/matris.js/',
   },
   /*
    ** Headers of the page

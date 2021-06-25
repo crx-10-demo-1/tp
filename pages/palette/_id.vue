@@ -3,10 +3,18 @@
     <h2>パレット画面</h2>
     <v-divider class="mb-3" />
     <v-row>
-      <v-col cols="6" sm="3">
-        <v-btn color="#c7cbd1" block height="56px" style="font-size: 18px"
-          >格子ボタン</v-btn
+      <v-col cols="12" sm="6">
+        <v-chip
+          v-if="chidoriOn == true"
+          style="font-size: 24px"
+          class="pa-5"
+          color="#add8e6"
         >
+          千鳥
+        </v-chip>
+        <v-chip v-else style="font-size: 24px" class="pa-5" color="#add8e6">
+          格子
+        </v-chip>
       </v-col>
       <v-spacer />
       <v-col cols="12" sm="2" class="mb-0 pb-0">
@@ -124,16 +132,40 @@
         </v-row>
       </v-col>
       <v-col cols="12" sm="6" class="my-0 py-0">
-        <v-img
-          :src="`${$config.STATIC_URL}image/sample3.jpg`"
-          width="100%"
-          class="mx-auto my-0 py-0"
-        />
+        <div v-if="chidoriOn">
+          <v-img
+            :src="`${$config.STATIC_URL}image/chidori.png`"
+            contain
+            class="mx-auto my-0 py-0"
+          />
+        </div>
+        <div v-else>
+          <v-img
+            :src="`${$config.STATIC_URL}image/koushi.png`"
+            contain
+            class="mx-auto my-0 py-0"
+          />
+        </div>
       </v-col>
     </v-row>
     <v-row>
       <v-col cols="6" sm="3" class="mt-0 pt-0">
-        <v-btn color="#c7cbd1" block height="56px" style="font-size: 18px"
+        <v-btn
+          v-if="chidoriOn == true"
+          color="#c7cbd1"
+          block
+          height="56px"
+          style="font-size: 18px"
+          @click="chidoriOn = false"
+          >格子ボタン</v-btn
+        >
+        <v-btn
+          v-else
+          color="#c7cbd1"
+          block
+          height="56px"
+          style="font-size: 18px"
+          @click="chidoriOn = true"
           >千鳥ボタン</v-btn
         >
       </v-col>
@@ -284,6 +316,7 @@ import { Component, Vue } from 'nuxt-property-decorator'
 @Component
 export default class PalettePage extends Vue {
   paletteId = this.$route.params.id
+  chidoriOn = false
   form = {
     paletteId: this.paletteId,
     paletteName: '',
@@ -299,6 +332,7 @@ export default class PalettePage extends Vue {
     evenColRowInterval: 0,
     evenColColCount: 0,
     evenColColInterval: 0,
+    // type:0,
   }
 
   rowPlus() {
